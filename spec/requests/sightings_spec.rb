@@ -22,12 +22,26 @@ RSpec.describe "Sightings", type: :request do
     date: Time.zone.parse(DateTime.now.iso8601).utc,
     animal_id: animal2.id
   }) }
+  let(:sighting2){ Sighting.create!({
+    latitude: 1925.32556,
+    longitude: 93286.13234,
+    date: Time.zone.parse(DateTime.now.iso8601).utc,
+    animal_id: animal2.id
+  }) }
+  let(:sighting3){ Sighting.create!({
+    latitude: 132,
+    longitude: 0.2326,
+    date: Time.zone.parse(DateTime.now.iso8601).utc,
+    animal_id: animal2.id
+  }) }
 
   before do
     animal1
     animal2
     animal3
     sighting
+    sighting2
+    sighting3
   end
 
   describe 'create' do
@@ -77,7 +91,7 @@ RSpec.describe "Sightings", type: :request do
   describe 'destroy' do
     let(:request){ delete "/sightings/#{sighting.id}" }
     let(:expected_response){ {
-      sightings: [{}]
+      sightings: [sighting2, sighting3]
     }.to_json }
     it 'destroys sighting from the database' do
       expect{ request }.to change{ Sighting.count }.by ( -1 )
