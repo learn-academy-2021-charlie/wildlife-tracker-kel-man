@@ -16,11 +16,18 @@ RSpec.describe "Animals", type: :request do
     latin_name: 'haliaeetus leucocephalus',
     kingdom: 'raptor'
   }) }
+  let(:sighting){ Sighting.create!({
+    latitude: 1235326,
+    longitude: 12342352,
+    date: Time.zone.parse(DateTime.now.iso8601).utc,
+    animal_id: animal2.id
+  }) }
 
   before do
     animal1
     animal2
     animal3
+    sighting
   end
 
   describe 'index' do
@@ -57,6 +64,7 @@ RSpec.describe "Animals", type: :request do
       common_name: animal2.common_name,
       latin_name: animal2.latin_name,
       kingdom: animal2.kingdom,
+      sightings: [sighting]
     }.to_json }
     it 'shows only animal 2 from the database' do
       request

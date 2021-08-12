@@ -6,6 +6,7 @@ class AnimalsController < ApplicationController
 
   def show
     @animal = Animal.find(params[:id])
+    @sightings = Sighting.where(animal_id: params[:id])
     render('show')
   end
 
