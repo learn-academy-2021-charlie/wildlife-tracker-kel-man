@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_12_173919) do
+ActiveRecord::Schema.define(version: 2021_08_12_205133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 2021_08_12_173919) do
     t.string "kingdom"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "sightings", force: :cascade do |t|
+    t.datetime "date"
+    t.float "latitude"
+    t.float "longitude"
+    t.bigint "animal_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["animal_id"], name: "index_sightings_on_animal_id"
   end
 
 end
