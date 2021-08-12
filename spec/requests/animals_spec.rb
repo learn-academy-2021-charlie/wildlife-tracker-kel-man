@@ -86,4 +86,27 @@ RSpec.describe "Animals", type: :request do
       expect(animal2.reload.latin_name).to eq new_latin
     end
   end
+
+  describe "destroy" do
+    let(:request){ delete "/animals/#{animal2.id}" }
+    let(:expected_response){ {
+      animals: [{
+        id: animal1.id,
+        common_name: animal1.common_name,
+        latin_name: animal1.latin_name,
+        kingdom: animal1.kingdom,
+      }, {
+        id: animal3.id,
+        common_name: animal3.common_name,
+        latin_name: animal3.latin_name,
+        kingdom: animal3.kingdom,
+      } ]
+    }.to_json }
+    it 'destroys animal2 from the database' do
+      expect{ request }.to change{ Animal.count }.by ( -1 )
+      expect(response.status).to eq 204
+      get '/animals'
+      expect(response.body).to eq expected_response
+    end
+  end
 end

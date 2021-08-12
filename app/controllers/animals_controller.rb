@@ -24,6 +24,13 @@ class AnimalsController < ApplicationController
   end
 
   def destroy
+    @animal = Animal.find(params[:id])
+    if @animal
+      @animal.destroy
+      head 204
+    else
+      head 404
+    end
 
   end
 
