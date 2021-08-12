@@ -23,34 +23,34 @@ RSpec.describe "Animals", type: :request do
     animal3
   end
 
-  describe "index" do
+  describe 'index' do
     let(:request){ get '/animals' }
     let(:expected_response) {
       [{
-        "id" => animal1.id,
-        "common_name" => animal1.common_name,
-        "latin_name" => animal1.latin_name,
-        "kingdom" => animal1.kingdom,
+        'id' => animal1.id,
+        'common_name' => animal1.common_name,
+        'latin_name' => animal1.latin_name,
+        'kingdom' => animal1.kingdom,
       }, {
-        "id" => animal2.id,
-        "common_name" => animal2.common_name,
-        "latin_name" => animal2.latin_name,
-        "kingdom" => animal2.kingdom,
+        'id' => animal2.id,
+        'common_name' => animal2.common_name,
+        'latin_name' => animal2.latin_name,
+        'kingdom' => animal2.kingdom,
       }, {
-        "id" => animal3.id,
-        "common_name" => animal3.common_name,
-        "latin_name" => animal3.latin_name,
-        "kingdom" => animal3.kingdom,
+        'id' => animal3.id,
+        'common_name' => animal3.common_name,
+        'latin_name' => animal3.latin_name,
+        'kingdom' => animal3.kingdom,
       }]
     }
 
     it 'returns a list of all the items in JSON' do
       request
-      expect(JSON.parse(response.body)["animals"]).to include(*expected_response)
+      expect(JSON.parse(response.body)['animals']).to include(*expected_response)
     end
   end
 
-  describe "show" do
+  describe 'show' do
     let(:request){ get "/animals/#{animal2.id}" }
     let(:expected_response) { {
       id: animal2.id,
@@ -64,9 +64,9 @@ RSpec.describe "Animals", type: :request do
     end
   end
 
-  describe "create" do
-    let(:new_common){ "komodo dragon" }
-    let(:new_latin){ "varanus komodoensis" }
+  describe "update" do
+    let(:new_common){ 'komodo dragon' }
+    let(:new_latin){ 'varanus komodoensis' }
     let(:request){ patch "/animals/#{animal2.id}", params: {
       animal: {
         common_name: new_common,
@@ -75,9 +75,9 @@ RSpec.describe "Animals", type: :request do
     } }
     let(:request2){ get "/animals/#{animal2.id}" }
     let(:expected_response) { {
-      "id" => animal2.id,
-      "common_name" => new_common,
-      "latin_name" => new_latin
+      'id' => animal2.id,
+      'common_name' => new_common,
+      'latin_name' => new_latin
     } }
     it 'edits the names of the monitor lizard to komodo dragon' do
       request
@@ -87,7 +87,7 @@ RSpec.describe "Animals", type: :request do
     end
   end
 
-  describe "destroy" do
+  describe 'destroy' do
     let(:request){ delete "/animals/#{animal2.id}" }
     let(:expected_response){ {
       animals: [{
@@ -107,6 +107,28 @@ RSpec.describe "Animals", type: :request do
       expect(response.status).to eq 204
       get '/animals'
       expect(response.body).to eq expected_response
+    end
+  end
+
+  describe 'create' do
+    let(:common_name){ 'siberian tiger' }
+    let(:latin_name){ 'panthera tirgris tigris' }
+    let(:kingdom){ 'mammal' }
+    let(:request){ post '/animals', params: {
+      animal: {
+        common_name: common_name,
+        latin_name: latin_name,
+        kingdom: kingdom,
+      }
+    } }
+    let(:expected_response){ {
+      'common_name' => common_name,
+      'latin_name' => latin_name,
+      'kingdom' => kingdom
+    } }
+    it 'creates a new instance of animal with the expected values' do
+      expect{ request }.to change{ Animal.count }.by (1)
+      expect(JSON.parse(response.body)).to include expected_response
     end
   end
 end

@@ -10,7 +10,8 @@ class AnimalsController < ApplicationController
   end
 
   def create
-
+    @animal = Animal.create(animal_params)
+    render('show')
   end
 
   def update
