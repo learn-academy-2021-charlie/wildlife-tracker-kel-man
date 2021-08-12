@@ -73,4 +73,17 @@ RSpec.describe "Sightings", type: :request do
       expect(sighting.reload.latitude).to eq new_lat
     end
   end
+
+  describe 'destroy' do
+    let(:request){ delete "/sightings/#{sighting.id}" }
+    let(:expected_response){ {
+      sightings: [{}]
+    }.to_json }
+    it 'destroys sighting from the database' do
+      expect{ request }.to change{ Sighting.count }.by ( -1 )
+      expect(response.status).to eq 204
+      # get '/sightings'
+      # expect(response.body).to eq expected_response
+    end
+  end
 end
