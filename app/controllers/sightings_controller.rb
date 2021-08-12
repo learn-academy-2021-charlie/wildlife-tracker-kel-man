@@ -24,6 +24,11 @@ class SightingsController < ApplicationController
     end
   end
 
+  def index
+    @sightings = Sighting.where(date: params[:start_date]..params[:end_date])
+    render('index')
+  end
+
   private
   def sighting_params
     params.require(:sighting).permit(:date, :latitude, :longitude, :animal_id)
