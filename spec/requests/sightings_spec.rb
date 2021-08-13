@@ -31,7 +31,7 @@ RSpec.describe "Sightings", type: :request do
   let(:sighting3){ Sighting.create!({
     latitude: 132,
     longitude: 0.2326,
-    date: Time.zone.parse(DateTime.now.iso8601).utc,
+    date: Time.zone.parse(DateTime.new(2001,2,3,4,5,6).iso8601).utc,
     animal_id: animal2.id
   }) }
 
@@ -96,8 +96,33 @@ RSpec.describe "Sightings", type: :request do
     it 'destroys sighting from the database' do
       expect{ request }.to change{ Sighting.count }.by ( -1 )
       expect(response.status).to eq 204
-      # get '/sightings'
-      # expect(response.body).to eq expected_response
+    end
+  end
+
+  describe 'index' do
+    let(:request){ get "/sightings", params: {
+      start_date: sighting.date,
+      end_date: sighting2.date,
+      }
+    }
+    let(:expected_response){ {
+      'sightings' => [{
+        'id' => sighting.id,
+        'date' => sighting.date.to_time.iso8601[0..18]+'.000Z',
+        'latitude' => sighting.latitude,
+        'longitude' => sighting.longitude,
+        'animal_id' => sighting.animal_id,
+      }, {
+        'id' => sighting2.id,
+        'date' => sighting2.date.to_time.iso8601[0..18]+'.000Z',
+        'latitude' => sighting2.latitude,
+        'longitude' => sighting2.longitude,
+        'animal_id' => sighting2.animal_id,
+      }]
+    } }
+    it 'only returns sightings for the given time period' do
+      request
+      expect(JSON.parse(response.body)).to include expected_response
     end
   end
 end
